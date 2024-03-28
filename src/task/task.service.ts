@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDto, DeleteDto, completeDto } from './task.dto'
 import { PrismaClient } from '@prisma/client'
 import { error } from 'console'
@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class TaskService {
-
 	async getById(id: number) {
 		const task = await prisma.task.findUnique({
 			where: {
@@ -15,8 +14,7 @@ export class TaskService {
 			}
 		})
 
-		// if (!task) return { message: "not find task" }
-		if (!task) throw new error()
+		if (!task) throw new NotFoundException("Task not found!")
 
 		return task
 	}
@@ -35,9 +33,7 @@ export class TaskService {
 			return newTask
 		} catch(err) {
 			console.error(err)
-			return {
-				message: "not create task"
-			}
+			throw new error("Failed create task!")
 		}
 	}
 
@@ -54,9 +50,7 @@ export class TaskService {
 			return task
 		} catch(err) {
 			console.error(err)
-			return {
-				message: "not delete task"
-			}
+			throw new error("Failed delete task!")
 		}
 	}
 
@@ -67,9 +61,7 @@ export class TaskService {
 			return Tasks
 		} catch(err) {
 			console.error(err)
-			return {
-				message: "not create task"
-			}
+			throw new error("Failed get tasks!")
 		}
 	}
 
@@ -85,13 +77,11 @@ export class TaskService {
 					isComplete: !task.isComplete
 				}
 			})
-
+	
 			return updateTask;
 		} catch (err) {
 			console.error(err)
-			return {
-				message: "not complete task"
-			}
+			throw new error("Failed complete task!")
 		}
 	}
 }

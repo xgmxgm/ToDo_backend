@@ -3,6 +3,9 @@ import { IsArray, IsNumber, IsString } from 'class-validator'
 export class CreateDto {
 	@IsString()
 	description: string;
+
+	@IsNumber()
+	authorId: number;
 }
 
 export class DeleteDto {

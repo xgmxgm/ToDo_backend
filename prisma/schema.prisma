@@ -13,8 +13,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int @default(autoincrement()) @id
+  fullName     String
+  email        String @unique
+  passwordHash String
+  avatarURL    String? @default("defaultUser.png")
+  Tasks        Task[]
+}
+
 model Task {
   id          Int @default(autoincrement()) @id
   isComplete  Boolean
   description String
+  author      User @relation(fields: [authorId], references: [id])
+  authorId    Int
 }

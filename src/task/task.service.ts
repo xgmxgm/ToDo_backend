@@ -24,10 +24,15 @@ export class TaskService {
 			const task = {
 				isComplete: false,
 				description: dto.description,
+				authorId: dto.authorId,
 			}
 
 			const newTask = await prisma.task.create({
-				data: task,
+				data: {
+					isComplete: task.isComplete,
+					description: task.description,
+					authorId: task.authorId,
+				},
 			})
 
 			return newTask

@@ -83,16 +83,16 @@ export class UserService {
 
 			const {passwordHash, ...user} = findUser
 
-			const token = {
-				token: await this.jwtService.signAsync(user)
-			}
-
-			// const user = {
-			// 	token: await this.jwtService.signAsync(User),
-			// 	user: User,
+			// const token = {
+			// 	token: await this.jwtService.signAsync(user)
 			// }
 
-			return token
+			const User = {
+				// token: await this.jwtService.signAsync(User),
+				user: user,
+			}
+
+			return User
 		} catch (err) {
 			console.error(err)
 			throw new error("Failed sign in!")

@@ -83,13 +83,8 @@ export class UserService {
 
 			const {passwordHash, ...user} = findUser
 
-			// const token = {
-			// 	token: await this.jwtService.signAsync(user)
-			// }
-
 			const User = {
-				// token: await this.jwtService.signAsync(User),
-				user: user,
+				token: await this.jwtService.signAsync(user),
 			}
 
 			return User

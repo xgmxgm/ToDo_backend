@@ -11,8 +11,9 @@ export class signUpDto {
 	password: string;
 
 	@IsOptional()
-	@IsUrl()
-	avatarURL: string;
+	// @IsUrl()
+	// avatarURL: string;
+	avatarURL: any;
 }
 
 export class signInDto {

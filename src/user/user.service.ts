@@ -1,6 +1,5 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client'
-import { error } from 'console'
 import { JwtService } from "@nestjs/jwt"
 import * as bcrypt from "bcrypt"
 import { signInDto, signUpDto } from './user.dto'
@@ -13,84 +12,66 @@ export class UserService {
 		private jwtService: JwtService
 	) {}
 
-	async getById(id: number) {
-		const task = await prisma.task.findUnique({
+	async signUp(dto: signUpDto) {
+		const findUser = await prisma.user.findFirst({
 			where: {
-				id: id
+				email: dto.email
 			}
 		})
 
-		if (!task) throw new NotFoundException("Task not found!")
+		if (findUser) throw new BadRequestException("User already exists!");
 
-		return task
-	}
-
-	async signUp(dto: signUpDto) {
-		try {
-			const findUser = await prisma.user.findFirst({
-				where: {
-					email: dto.email
-				}
-			})
-
-			if (findUser) {
-				return {message: "User already exists!"}
-			}
-
-			const salt = await bcrypt.genSalt(10);
-			const passwordHashing = await bcrypt.hash(dto.password, salt);
-
-			const createUser = {
-				fullName: dto.fullName,
-				email: dto.email,
-				passwordHash: passwordHashing,
-				avatarURL: dto.avatarURL,
-			}
-
-			const newUser = await prisma.user.create({
-				data: createUser,
-			})
-
-			const {passwordHash, ...user} = newUser;
-
-			const token = {
-				token: await this.jwtService.signAsync(user)
-			}
-
-			return token
-		} catch (err) {
-			console.error(err)
-			throw new error("Failed sign up!")
+		if (dto.avatarURL) {
+			console.log("\n Avatar data: ", dto.avatarURL, "\n");
+			return true
 		}
+
+
+		const salt = await bcrypt.genSalt(10);
+		const passwordHashing = await bcrypt.hash(dto.password, salt);
+
+		const createUser = {
+			fullName: dto.fullName,
+			email: dto.email,
+			passwordHash: passwordHashing,
+			avatarURL: dto.avatarURL,
+		}
+
+		const newUser = await prisma.user.create({
+			data: createUser,
+		})
+
+		const {passwordHash, ...user} = newUser;
+
+		const token = {
+			token: await this.jwtService.signAsync(user)
+		}
+
+		return token
 	}
 
 	async signIn(dto: signInDto) {
-		try {
-			const findUser = await prisma.user.findFirst({
-				where: {
-					email: dto.email,
-				},
-				include: {
-					Tasks: {}
-				}
-			})
-
-			if (!findUser) return "Wrong login or password!"
-
-			const isValidPass = await bcrypt.compare(dto.password, findUser.passwordHash);
-
-			if (!isValidPass) return "Wrong login or password!"
-
-			const {passwordHash, ...user} = findUser
-
-			const User = {
-				token: await this.jwtService.signAsync(user),
+		const findUser = await prisma.user.findFirst({
+			where: {
+				email: dto.email,
+			},
+			include: {
+				Tasks: {}
 			}
+		});
 
-			return User
-		} catch (err) {
-			console.error(err)
-			throw new error("Failed sign in!")
+		if (!findUser) throw new NotFoundException("Wrong email or password!");
+
+		const isValidPass = await bcrypt.compare(dto.password, findUser.passwordHash);
+
+		if (!isValidPass) throw new NotFoundException("Wrong email or password!");
+
+		const { passwordHash, ...user } = findUser
+
+		const User = {
+			token: await this.jwtService.signAsync(user),
 		}
+
+		return User
 	}
 }

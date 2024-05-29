@@ -1,6 +1,7 @@
-import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Post, UploadedFile, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { signInDto, signUpDto } from './user.dto'
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @Controller('user')
 export class UserController {
@@ -13,8 +14,10 @@ export class UserController {
   }
   
   @Post('signup')
+  @UseInterceptors(FileInterceptor('avatarURL'))
   @UsePipes(new ValidationPipe())
-  async signUp(@Body() dto: signUpDto) {
+  async signUp(@UploadedFile() file: Express.Multer.File, @Body() dto: signUpDto) {
+    console.log("File: ",file)
     return this.userService.signUp(dto);
   }
 }

@@ -18,7 +18,7 @@ model User {
   fullName     String
   email        String @unique
   passwordHash String
-  avatarURL    String? @default("defaultUser.png")
+  colorAvatar  String
   Tasks        Task[]
 }
 

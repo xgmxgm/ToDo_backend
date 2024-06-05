@@ -21,12 +21,6 @@ export class UserService {
 
 		if (findUser) throw new BadRequestException("User already exists!");
 
-		if (dto.avatarURL) {
-			console.log("\n Avatar data: ", dto.avatarURL, "\n");
-			return true
-		}
-
-
 		const salt = await bcrypt.genSalt(10);
 		const passwordHashing = await bcrypt.hash(dto.password, salt);
 
@@ -34,7 +28,7 @@ export class UserService {
 			fullName: dto.fullName,
 			email: dto.email,
 			passwordHash: passwordHashing,
-			avatarURL: dto.avatarURL,
+			colorAvatar: dto.colorAvatar,
 		}
 
 		const newUser = await prisma.user.create({

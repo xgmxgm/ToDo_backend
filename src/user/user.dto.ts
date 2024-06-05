@@ -10,10 +10,8 @@ export class signUpDto {
 	@IsString()
 	password: string;
 
-	@IsOptional()
-	// @IsUrl()
-	// avatarURL: string;
-	avatarURL: any;
+	@IsString()
+	colorAvatar: string;
 }
 
 export class signInDto {

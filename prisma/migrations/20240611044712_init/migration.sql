@@ -4,7 +4,7 @@ CREATE TABLE "User" (
     "fullName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
-    "colorAvatar" TEXT NOT NULL
+    "colorAvatar" TEXT NOT NULL DEFAULT '#9BB8ED'
 );
 
 -- CreateTable

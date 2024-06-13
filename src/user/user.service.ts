@@ -13,6 +13,8 @@ export class UserService {
 	) {}
 
 	async signUp(dto: signUpDto) {
+		console.log(dto)
+
 		const findUser = await prisma.user.findFirst({
 			where: {
 				email: dto.email

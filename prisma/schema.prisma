@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id           Int @default(autoincrement()) @id
+  id           Int    @default(autoincrement()) @id
   fullName     String
   email        String @unique
   passwordHash String
@@ -23,9 +23,10 @@ model User {
 }
 
 model Task {
-  id          Int @default(autoincrement()) @id
+  id          Int     @default(autoincrement()) @id
   isComplete  Boolean
+  title       String
   description String
-  author      User @relation(fields: [authorId], references: [id])
+  author      User    @relation(fields: [authorId], references: [id])
   authorId    Int
 }

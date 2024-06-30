@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDto, DeleteDto, completeDto } from './task.dto';
+import { CreateDto, CreateSubDto, DeleteDto, DeleteSubDto, completeDto } from './task.dto';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -21,7 +21,6 @@ export class TaskService {
 	async createTask(dto: CreateDto) {
 		const task = {
 			title: dto.title,
-			description: dto.description,
 			isComplete: false,
 			authorId: dto.authorId,
 		};
@@ -29,13 +28,40 @@ export class TaskService {
 		const newTask = await prisma.task.create({
 			data: {
 				title: task.title,
-				description: task.description,
 				isComplete: task.isComplete,
 				authorId: task.authorId,
 			},
 		});
 
 		return newTask;
+	}
+
+	async createSubTask(dto: CreateSubDto) {
+		const subTask = {
+			title: dto.title,
+			isComplete: false,
+			taskId: dto.taskId,
+		}
+
+		const newSubTask = await prisma.subTask.create({
+			data: {
+				title: subTask.title,
+				isComplete: subTask.isComplete,
+				taskId: subTask.taskId,
+			}
+		})
+
+		return newSubTask;
+	}
+
+	async deleteSubTask(dto: DeleteSubDto) {
+		const subTask = await prisma.subTask.deleteMany({
+			where: {
+				id: dto.id
+			}
+		})
+
+		return subTask
 	}
 
 	async deleteTask(dto: DeleteDto) {

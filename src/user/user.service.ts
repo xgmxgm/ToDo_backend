@@ -50,7 +50,11 @@ export class UserService {
 				email: dto.email,
 			},
 			include: {
-				Tasks: {}
+				Tasks: {
+					include: {
+						subTasks: {}
+					}
+				}
 			}
 		});
 

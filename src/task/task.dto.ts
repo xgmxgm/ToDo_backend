@@ -4,11 +4,21 @@ export class CreateDto {
 	@IsString()
 	title: string;
 
-	@IsString()
-	description: string;
-
 	@IsNumber()
 	authorId: number;
+}
+
+export class CreateSubDto {
+	@IsString()
+	title: string;
+
+	@IsNumber()
+	taskId: number;
+}
+
+export class DeleteSubDto {
+	@IsNumber()
+	id: number;
 }
 
 export class DeleteDto {

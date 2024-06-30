@@ -23,10 +23,18 @@ model User {
 }
 
 model Task {
+  id          Int       @default(autoincrement()) @id
+  isComplete  Boolean
+  title       String
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  subTasks    SubTask[]
+}
+
+model SubTask {
   id          Int     @default(autoincrement()) @id
   isComplete  Boolean
   title       String
-  description String
-  author      User    @relation(fields: [authorId], references: [id])
-  authorId    Int
+  task        Task    @relation(fields: [taskId], references: [id])
+  taskId      Int
 }

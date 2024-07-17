@@ -1,21 +1,55 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDto, CreateSubDto, DeleteDto, DeleteSubDto, completeDto } from './task.dto';
-import { PrismaClient } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+	CreateDto,
+	CreateSubDto,
+	DeleteDto,
+	DeleteSubDto,
+	CompleteDto,
+	CompleteSubDto,
+} from './task.dto'
+import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 @Injectable()
 export class TaskService {
 	async getById(id: number) {
 		const task = await prisma.task.findUnique({
 			where: {
-				id: id
-			}
-		});
+				id: id,
+			},
+		})
 
-		if (!task) throw new NotFoundException("Task not found!");
+		if (!task) throw new NotFoundException('Task not found!')
 
-		return task;
+		return task
+	}
+
+	async getByAuthorId(authorId: number) {
+		const tasks = await prisma.task.findMany({
+			where: {
+				authorId,
+			},
+			include: {
+				subTasks: {},
+			},
+		})
+
+		if (!tasks) throw new NotFoundException('Tasks not found!')
+
+		return tasks
+	}
+
+	async getByIdSub(id: number) {
+		const subTask = await prisma.subTask.findUnique({
+			where: {
+				id,
+			},
+		})
+
+		if (!subTask) throw new NotFoundException('Sub task not found!')
+
+		return subTask
 	}
 
 	async createTask(dto: CreateDto) {
@@ -23,7 +57,7 @@ export class TaskService {
 			title: dto.title,
 			isComplete: false,
 			authorId: dto.authorId,
-		};
+		}
 
 		const newTask = await prisma.task.create({
 			data: {
@@ -31,9 +65,9 @@ export class TaskService {
 				isComplete: task.isComplete,
 				authorId: task.authorId,
 			},
-		});
+		})
 
-		return newTask;
+		return newTask
 	}
 
 	async createSubTask(dto: CreateSubDto) {
@@ -48,17 +82,17 @@ export class TaskService {
 				title: subTask.title,
 				isComplete: subTask.isComplete,
 				taskId: subTask.taskId,
-			}
+			},
 		})
 
-		return newSubTask;
+		return newSubTask
 	}
 
 	async deleteSubTask(dto: DeleteSubDto) {
 		const subTask = await prisma.subTask.deleteMany({
 			where: {
-				id: dto.id
-			}
+				id: dto.id,
+			},
 		})
 
 		return subTask
@@ -68,32 +102,47 @@ export class TaskService {
 		const task = await prisma.task.deleteMany({
 			where: {
 				id: {
-					in: dto.ids
-				}
-			}
+					in: dto.ids,
+				},
+			},
 		})
 
 		return task
 	}
 
-	async getAll() {
-		const Tasks = await prisma.task.findMany();
+	async getAll(id: string) {
+		const tasks = await this.getByAuthorId(+id)
 
-		return Tasks;
+		return tasks
 	}
 
-	async completeTask(dto: completeDto) {
-		const task = await this.getById(dto.id);
+	async completeTask(dto: CompleteDto) {
+		const task = await this.getById(dto.id)
 
 		const updateTask = await prisma.task.update({
 			where: {
-				id: task.id
+				id: task.id,
 			},
 			data: {
-				isComplete: !task.isComplete
-			}
-		});
+				isComplete: !task.isComplete,
+			},
+		})
 
-		return updateTask;
+		return updateTask
+	}
+
+	async completeSubTask(dto: CompleteSubDto) {
+		const subTask = await this.getByIdSub(dto.id)
+
+		const updateSubTask = await prisma.subTask.update({
+			where: {
+				id: subTask.id
+			},
+			data: {
+				isComplete: !subTask.isComplete
+			}
+		})
+
+		return updateSubTask
 	}
 }

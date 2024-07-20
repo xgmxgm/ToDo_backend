@@ -8,14 +8,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import {
-  CreateDto,
-  CreateSubDto,
-  DeleteDto,
-  DeleteSubDto,
-  CompleteDto,
-  CompleteSubDto,
-} from './task.dto';
+import { CompleteDto, CompleteSubDto, CreateDto, CreateSubDto, DeleteDto, DeleteSubDto } from './task.dto';
 
 @Controller('task')
 export class TaskController {

@@ -1,37 +1,37 @@
-import { IsArray, IsNumber, IsString } from 'class-validator'
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class CreateDto {
-	@IsString()
-	title: string
+  @IsString()
+  title: string;
 
-	@IsNumber()
-	authorId: number
+  @IsNumber()
+  authorId: number;
 }
 
 export class CreateSubDto {
-	@IsString()
-	title: string
+  @IsString()
+  title: string;
 
-	@IsNumber()
-	taskId: number
+  @IsNumber()
+  taskId: number;
 }
 
 export class DeleteDto {
-	@IsArray()
-	ids: number[]
+  @IsArray()
+  ids: number[];
 }
 
 export class DeleteSubDto {
-	@IsNumber()
-	id: number
+  @IsNumber()
+  id: number;
 }
 
 export class CompleteDto {
-	@IsNumber()
-	id: number
+  @IsNumber()
+  id: number
 }
 
 export class CompleteSubDto {
-	@IsNumber()
-	id: number
+  @IsNumber()
+  id: number
 }

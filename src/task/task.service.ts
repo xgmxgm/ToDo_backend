@@ -1,12 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
-import {
-	CreateDto,
-	CreateSubDto,
-	DeleteDto,
-	DeleteSubDto,
-	CompleteDto,
-	CompleteSubDto,
-} from './task.dto'
+import { CompleteDto, CompleteSubDto, CreateDto, CreateSubDto, DeleteDto, DeleteSubDto } from './task.dto'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -136,11 +129,11 @@ export class TaskService {
 
 		const updateSubTask = await prisma.subTask.update({
 			where: {
-				id: subTask.id
+				id: subTask.id,
 			},
 			data: {
-				isComplete: !subTask.isComplete
-			}
+				isComplete: !subTask.isComplete,
+			},
 		})
 
 		return updateSubTask

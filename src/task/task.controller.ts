@@ -8,7 +8,16 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
-import { CompleteDto, CompleteSubDto, CreateDto, CreateSubDto, DeleteDto, DeleteSubDto } from './task.dto';
+import {
+  CompleteDto,
+  CompleteSubDto,
+  CreateDto,
+  CreateSubDto,
+  DeleteDto,
+  DeleteSubDto,
+  EditDto,
+  EditSubDto,
+} from './task.dto';
 
 @Controller('task')
 export class TaskController {
@@ -48,6 +57,18 @@ export class TaskController {
   @UsePipes(new ValidationPipe())
   async completeSubTask(@Body() dto: CompleteSubDto) {
     return this.taskService.completeSubTask(dto);
+  }
+
+  @Post('edit/task')
+  @UsePipes(new ValidationPipe())
+  async editTask(@Body() dto: EditDto) {
+    return this.taskService.editTask(dto);
+  }
+  
+  @Post('edit/subtask')
+  @UsePipes(new ValidationPipe())
+  async editSubtask(@Body() dto: EditSubDto) {
+    return this.taskService.editSubtask(dto);
   }
 
   @Get('get-tasks/:id')

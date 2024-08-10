@@ -44,3 +44,19 @@ export class CompleteSubDto {
   @IsNumber()
   id: number
 }
+
+export class EditDto {
+  @IsNumber()
+  id: number
+
+  @IsString()
+  title: string
+}
+
+export class EditSubDto {
+  @IsNumber()
+  id: number
+
+  @IsString()
+  title: string
+}

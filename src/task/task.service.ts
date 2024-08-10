@@ -6,6 +6,8 @@ import {
 	CreateSubDto,
 	DeleteDto,
 	DeleteSubDto,
+	EditDto,
+	EditSubDto,
 } from './task.dto'
 import { PrismaClient } from '@prisma/client'
 
@@ -47,7 +49,7 @@ export class TaskService {
 			},
 		})
 
-		if (!subTask) throw new NotFoundException('Sub task not found!')
+		if (!subTask) throw new NotFoundException('Subtask not found!')
 
 		return subTask
 	}
@@ -155,5 +157,35 @@ export class TaskService {
 		})
 
 		return updateSubTask
+	}
+
+	async editTask(dto: EditDto) {
+		const task = await this.getById(dto.id)
+
+		const changedTask = await prisma.task.update({
+			where: {
+				id: task.id
+			},
+			data: {
+				title: dto.title
+			}
+		})
+
+		return changedTask
+	}
+	
+	async editSubtask(dto: EditSubDto) {
+		const subtask = await this.getByIdSub(dto.id)
+
+		const changedSubtask = await prisma.subTask.update({
+			where: {
+				id: subtask.id
+			},
+			data: {
+				title: dto.title
+			}
+		})
+
+		return changedSubtask
 	}
 }

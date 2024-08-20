@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, IsUrl } from 'class-validator'
+import { IsEmail, IsString } from 'class-validator'
 
 export class signUpDto {
 	@IsString()

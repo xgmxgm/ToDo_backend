@@ -8,7 +8,7 @@ import { UserController } from './user.controller';
     JwtModule.register({
       global: true,
       secret: process.env.SECRETKEY,
-      signOptions: { expiresIn: "60s" }
+      signOptions: { expiresIn: "2h" }
     })
   ],
   controllers: [UserController],

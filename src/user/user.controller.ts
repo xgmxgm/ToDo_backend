@@ -17,4 +17,13 @@ export class UserController {
   async signUp(@Body() dto: signUpDto) {
     return this.userService.signUp(dto);
   }
+
+  @Post('refresh')
+  async refresh(@Body('refreshToken') refreshToken: string) {
+    const validRefreshToken = await this.userService.verifyRefreshToken(refreshToken)
+    if (validRefreshToken) {
+      const payload =  { username: validRefreshToken.username, sub: validRefreshToken.sub }
+      return this.userService.generateTokens(payload);
+    }
+  }
 }

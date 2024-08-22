@@ -1,6 +1,12 @@
-import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { UserService } from './user.service';
+import {
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { signInDto, signUpDto } from './user.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
@@ -11,7 +17,7 @@ export class UserController {
   async signIn(@Body() dto: signInDto) {
     return this.userService.signIn(dto);
   }
-  
+
   @Post('signup')
   @UsePipes(new ValidationPipe())
   async signUp(@Body() dto: signUpDto) {
@@ -20,9 +26,13 @@ export class UserController {
 
   @Post('refresh')
   async refresh(@Body('refreshToken') refreshToken: string) {
-    const validRefreshToken = await this.userService.verifyRefreshToken(refreshToken)
+    const validRefreshToken =
+      await this.userService.verifyRefreshToken(refreshToken);
     if (validRefreshToken) {
-      const payload =  { username: validRefreshToken.username, sub: validRefreshToken.sub }
+      const payload = {
+        username: validRefreshToken.username,
+        sub: validRefreshToken.sub,
+      };
       return this.userService.generateTokens(payload);
     }
   }

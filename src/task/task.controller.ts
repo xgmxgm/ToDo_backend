@@ -64,7 +64,7 @@ export class TaskController {
   async editTask(@Body() dto: EditDto) {
     return this.taskService.editTask(dto);
   }
-  
+
   @Post('edit/subtask')
   @UsePipes(new ValidationPipe())
   async editSubtask(@Body() dto: EditSubDto) {

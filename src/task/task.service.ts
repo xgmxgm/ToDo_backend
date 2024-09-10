@@ -112,6 +112,8 @@ export class TaskService {
 	}
 
 	async deleteTask(dto: DeleteDto) {
+		await prisma.subTask.deleteMany();
+
 		const task = await prisma.task.deleteMany({
 			where: {
 				id: {
